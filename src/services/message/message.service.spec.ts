@@ -1,5 +1,5 @@
 import { MessageService } from './message.service';
-import { EmailService } from './email.service';
+import { EmailService } from '../email/email.service';
 import { MessageType } from 'src/interface/message.interface';
 
 describe('MessageService', () => {

@@ -1,6 +1,6 @@
 import { Injectable,Logger } from '@nestjs/common';
 import { Message, MessageType } from 'src/interface/message.interface';
-import { EmailService } from './email.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class MessageService {
