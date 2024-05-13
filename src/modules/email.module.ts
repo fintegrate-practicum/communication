@@ -3,7 +3,6 @@ import { EmailService } from '../services/email.service';
 import { MessageService } from '../services/message.service';
 
 @Module({
-  providers: [EmailService, MessageService]
+  providers: [EmailService, MessageService],
 })
-
-export class EmailModule { }
+export class EmailModule {}

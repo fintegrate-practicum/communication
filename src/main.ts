@@ -1,29 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {Transport, MicroserviceOptions} from '@nestjs/microservices';
-import { AppController } from './app.controller';
+import { Transport } from '@nestjs/microservices';
 
-  async function bootstrap() {
-    const app = await NestFactory.createMicroservice(
-      AppModule, 
-      {
-      transport: Transport.RMQ,
-      options: {  
-        urls: ['amqp://localhost:5673'],
-        queue: 'message_queue',
-        queueOptions: {
-          durable: false
-        },
-        username: 'guest',
-        password: 'guest',
+async function bootstrap() {
+  const app = await NestFactory.createMicroservice(AppModule, {
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5673'],
+      queue: 'message_queue',
+      queueOptions: {
+        durable: false,
       },
-    });
-    await app.listen();
-  }
-  bootstrap();
-
-
-  
-  
-    
-  
+      username: 'guest',
+      password: 'guest',
+    },
+  });
+  await app.listen();
+}
+bootstrap();
