@@ -29,6 +29,59 @@ export class MailBridgeService {
     }
   }
 
+  private async messageHtml(to: string, subject: string, text: string): Promise<string> {
+  
+    try {
+      const filePath =
+        'src/EmployeeInvitationEmail/EmployeeMessageEmail.html';
+      const htmlContent = await readFile(filePath, 'utf-8');
+      const personalizedHtml = htmlContent
+        .replace("[Name]", to)
+        .replace("[Subject]", subject)
+        .replace("[content of the message]", text)
+      return personalizedHtml;
+    } catch (error) {
+      console.error('Error reading HTML file:', error);
+      throw new Error('Failed to read HTML file for new employee email');
+    }
+
+  }
+
+  private async sendCodeHtml(to: string, subject: string, text: string,code:string): Promise<string> {
+    try {
+      const filePath =
+        'src/EmployeeInvitationEmail/EmployeeSendCodeEmail.html';
+      const htmlContent = await readFile(filePath, 'utf-8');
+      const personalizedHtml = htmlContent
+        .replace("[Name]", to)
+        .replace("[Subject]", subject)
+        .replace("[content of the message]", text)
+        .replace("[code]", code)
+      return personalizedHtml;
+    } catch (error) {
+      console.error('Error reading HTML file:', error);
+      throw new Error('Failed to read HTML file for new employee email');
+  }
+}
+
+  private messageHtmlNewTask(message: TaskMessage): string {
+    return `
+        <h1>Assign a new task-${message.subject}</h1>
+        <h2>hello ${message.name}</h2>
+        <h2>A new task has been assigned for you:${message.subject}</h2>
+        <p>Mission description:
+        ${message.description}
+        </p>
+        <h2>Due Date: ${message.date}</h2>
+        <p>
+        Please let me know if you have any questions about the assignment.</br>
+        I trust you to carry out the task in the best possible way.</br>
+        Successfully,
+        </p>
+        <h2>${message.managerName}</h2>
+
+      `;
+  }
 
   async handleMessage(message: any): Promise<void> {
     let htmlContent: string;
@@ -73,46 +126,5 @@ export class MailBridgeService {
       kindSubject: message.kindSubject,
     };
     await this.messageService.sendMessage(formattedMessage);
-  }
-
-  private messageHtml(to: string, subject: string, text: string): string {
-    //פה מחזירים איך רוצים שההודעה תראה במייל, html
-    return `
-        <h1>${subject}</h1>
-        <p>Hello ${to},</p>
-        <p>${text}</p>
-        <p>How are you?</p>
-        <p>Best regards,</p>
-        <p>RabbitMq</p>
-      `;
-  }
-  private sendCodeHtml(to: string, subject: string, text: string,code:string): string {
-    return `
-        <h1>${subject}</h1>
-        <p>Hello ${to},</p>
-        <p>${text}</p>
-        <p>This is your verification code</p>
-        <p>${code}</p>
-        `;
-  }
-        
-
-  private messageHtmlNewTask(message: TaskMessage): string {
-    return `
-        <h1>Assign a new task-${message.subject}</h1>
-        <h2>hello ${message.name}</h2>
-        <h2>A new task has been assigned for you:${message.subject}</h2>
-        <p>Mission description:
-        ${message.description}
-        </p>
-        <h2>Due Date: ${message.date}</h2>
-        <p>
-        Please let me know if you have any questions about the assignment.</br>
-        I trust you to carry out the task in the best possible way.</br>
-        Successfully,
-        </p>
-        <h2>${message.managerName}</h2>
-
-      `;
-  }
+  }     
 }
