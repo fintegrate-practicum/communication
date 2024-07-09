@@ -22,7 +22,7 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('DATABASE_URI'),
+        uri: config.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
     }),
