@@ -13,7 +13,7 @@ async function bootstrap() {
         password: process.env.AMQP_PASSWORD,
       },
     });
-    const g = 8;
+    const j = 8;
     microserviceApp.listen();
     const httpApp = await NestFactory.create(AppModule);
     await httpApp.listen(4156);
