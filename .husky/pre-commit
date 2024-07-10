@@ -18,12 +18,13 @@ UNUSED_VARS=$(echo "$STAGED_FILES" | xargs ./node_modules/.bin/eslint --print-co
 if [ -n "$UNUSED_VARS" ]; then
   echo "Removing unused variables: $UNUSED_VARS"
   for VAR in $UNUSED_VARS; do
-    sed -i "/$VAR/d" $STAGED_FILES
+    sed -i "/\b$VAR\b/d" $STAGED_FILES
   done
+  # Add the modified files back to staging after removing unused variables
+  echo "$STAGED_FILES" | xargs git add
+else
+  # If no unused variables found, add back the modified/prettified files to staging
+  echo "$FILES" | xargs git add
 fi
-
-# Add back the modified/prettified files to staging
-echo "$FILES" | xargs git add
-echo "$STAGED_FILES" | xargs git add
 
 exit $?
