@@ -1,27 +1,15 @@
-
 FROM node:18
 
 WORKDIR /app
 
-COPY . /app
 
-RUN npm i -g nodemon
+COPY package*.json ./
 
 
-# RUN npm install @nestjs/common
-
-RUN npm install @nestjs/core
-
-RUN npm i reflect-metadata
+RUN npm install
 
 RUN npm run build
 
-EXPOSE 4156
+EXPOSE 4000
 
-CMD [ "node", "dist/main" ]
-
-
-
-
-
-
+CMD [ "npm", "run","start:dev" ]
