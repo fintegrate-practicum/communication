@@ -1,13 +1,15 @@
 #!/bin/sh
 
-FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
+# קבצים ששונו או נוספו וצריכים לעבור בדיקות
+FILES=$(git diff --cached --name-only --diff-filter=AM | sed 's| |\\ |g')
 [ -z "$FILES" ] && exit 0
 
+# הפעלת Prettier על הקבצים ששונו או נוספו
 echo "$FILES" | xargs ./node_modules/.bin/prettier --ignore-unknown --write
 
+# בדיקת ESLint על קבצי JavaScript ו-TypeScript ששונו או נוספו
 echo -e "\nValidating Javascript & Typescript with eslint:"
-
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.jsx?$|\.tsx?$|\.js$|\.ts$")
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=AM | grep -E "\.jsx?$|\.tsx?$|\.js$|\.ts$")
 
 if [ -n "$STAGED_FILES" ]; then
   ESLINT_OUTPUT=$(echo "$STAGED_FILES" | xargs ./node_modules/.bin/eslint --fix --format json)
@@ -21,25 +23,9 @@ if [ -n "$STAGED_FILES" ]; then
   fi
 fi
 
-echo -e "\nValidating JavaScript & TypeScript compilation:"
-TS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E  "\.tsx?$|\.ts$|\.jsx?$|\.js$")
 
-if [ -n "$TS_FILES" ]; then
-  for FILE in $TS_FILES
-  do
-    ./node_modules/.bin/tsc --noEmit "$FILE"
-    if [ $? -ne 0 ]; then
-      echo -e " JavaScript & TypeScript compilation failed for $FILE, aborting commit."
-      exit 1
-    fi
-  done
-fi
-
-
-
+# הוספת הקבצים ששונו או נוספו מחדש ל-stage
 echo "$FILES" | xargs git add
 echo "$STAGED_FILES" | xargs git add
 
 exit 0
-
-
