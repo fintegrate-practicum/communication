@@ -1,27 +1,19 @@
-
-FROM node:18
+FROM node:lts-alpine
 
 WORKDIR /app
 
-COPY . /app
 
-RUN npm i -g nodemon
+COPY package*.json ./
 
 
-# RUN npm install @nestjs/common
+RUN npm install
 
-RUN npm install @nestjs/core
 
-RUN npm i reflect-metadata
+COPY . .
+
 
 RUN npm run build
 
 EXPOSE 4156
 
-CMD [ "node", "dist/main" ]
-
-
-
-
-
-
+CMD [ "npm", "run","start:dev" ]
