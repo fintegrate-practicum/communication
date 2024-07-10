@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Transport } from '@nestjs/microservices';
-
 async function bootstrap() {
   try {
     const microserviceApp = await NestFactory.createMicroservice(AppModule, {
@@ -14,9 +13,8 @@ async function bootstrap() {
         password: process.env.AMQP_PASSWORD,
       },
     });
+    const g = 8;
     microserviceApp.listen();
-    const f = 5;
-
     const httpApp = await NestFactory.create(AppModule);
     await httpApp.listen(4156);
     console.log('HTTP server is listening on port 4156');
@@ -24,5 +22,4 @@ async function bootstrap() {
     console.error('Error during bootstrap:', error);
   }
 }
-
 bootstrap();
