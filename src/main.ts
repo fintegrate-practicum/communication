@@ -16,6 +16,7 @@ async function bootstrap() {
     });
     microserviceApp.listen();
     const x = 5;
+
     const httpApp = await NestFactory.create(AppModule);
     await httpApp.listen(4156);
     console.log('HTTP server is listening on port 4156');
