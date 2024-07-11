@@ -14,11 +14,11 @@ echo "$STAGED_FILES" | xargs ./node_modules/.bin/eslint --fix
 echo -e "ESLint validation completed."
 
 # Compile TypeScript files to check for errors
-echo -e "\nCompiling TypeScript files to check for errors:"
+echo -e "\nCompiling Javascript & Typescript files to check for errors:"
 ./node_modules/.bin/tsc --noEmit
 tsc_result=$?
 if [ $tsc_result -ne 0 ]; then
-  echo "TypeScript compilation errors found. Aborting commit."
+  echo "Javascript & Typescript compilation errors found. Aborting commit."
   exit 1
 fi
 
