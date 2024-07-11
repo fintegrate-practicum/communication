@@ -1,28 +1,38 @@
 #!/bin/sh
 
-# Fetch only modified staged files that match the specified types
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=M | grep "\.jsx\?$|\.tsx\?$|\.js$|\.ts$")
-[ -z "$STAGED_FILES" ] && exit 0
+# Fetch all staged files that match the specified types and are in modified state
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g' | grep "\.jsx\?$|\.tsx\?$|\.js$|\.ts$")
+[ -z "$FILES" ] && exit 0
 
 # Prettify all selected files
-echo "$STAGED_FILES" | xargs ./node_modules/.bin/prettier --ignore-unknown --write
+echo "$FILES" | xargs ./node_modules/.bin/prettier --ignore-unknown --write
 
 echo -e "\nValidating Javascript & Typescript with ESLint:"
-echo "$STAGED_FILES" | xargs ./node_modules/.bin/eslint --fix
+echo "$FILES" | xargs ./node_modules/.bin/eslint --fix
 
 echo -e "ESLint validation completed."
 
+# Create a temporary tsconfig file for staged files
+TMP_TSCONFIG=$(mktemp)
+cat <<EOF > $TMP_TSCONFIG
+{
+  "include": [
+    $(echo "$FILES" | sed 's|^|    "|;s|$|",|' | tr '\n' ' ')
+  ]
+}
+EOF
 
 # Compile only staged TypeScript files to check for errors
 echo -e "\nCompiling Javascript & Typescript files to check for errors:"
-echo "$STAGED_FILES" | xargs ./node_modules/.bin/tsc --noEmit --skipLibCheck
+./node_modules/.bin/tsc --noEmit --skipLibCheck -p $TMP_TSCONFIG
 tsc_result=$?
+rm $TMP_TSCONFIG
 if [ $tsc_result -ne 0 ]; then
   echo "Javascript & Typescript compilation errors found. Aborting commit."
   exit 1
 fi
 
 # Add back the modified/prettified files to staging
-echo "$STAGED_FILES" | xargs git add
+echo "$FILES" | xargs git add
 
 exit 0
