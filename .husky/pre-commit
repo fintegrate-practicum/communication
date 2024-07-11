@@ -1,1 +1,27 @@
 #!/bin/sh
+
+# Fetch all staged files that match the specified types and are in modified state
+FILES=$(git diff --cached --name-only --diff-filter=M | sed 's| |\\ |g' | grep "\.jsx?$|\.tsx?$|\.js$|\.ts$")
+[ -z "$FILES" ] && exit 0
+
+# Prettify all selected files
+echo "$FILES" | xargs ./node_modules/.bin/prettier --ignore-unknown --write
+
+echo -e "\nValidating Javascript & Typescript with ESLint:"
+echo "$FILES" | xargs ./node_modules/.bin/eslint --fix
+
+echo -e "ESLint validation completed."
+
+# Compile only staged TypeScript files to check for errors
+echo -e "\nCompiling Javascript & Typescript files to check for errors:"
+echo "$FILES" | xargs ./node_modules/.bin/tsc --noEmit --skipLibCheck
+tsc_result=$?
+if [ $tsc_result -ne 0 ]; then
+  echo "Javascript & Typescript compilation errors found. Aborting commit."
+  exit 1
+fi
+
+# Add back the modified/prettified files to staging
+echo "$FILES" | xargs git add
+
+exit 0
