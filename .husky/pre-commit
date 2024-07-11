@@ -12,7 +12,8 @@ echo "$STAGED_FILES" | xargs ./node_modules/.bin/eslint --fix
 
 echo -e "ESLint validation completed."
 
-# Compile only modified TypeScript files to check for errors
+
+# Compile only staged TypeScript files to check for errors
 echo -e "\nCompiling Javascript & Typescript files to check for errors:"
 echo "$STAGED_FILES" | xargs ./node_modules/.bin/tsc --noEmit --skipLibCheck
 tsc_result=$?
