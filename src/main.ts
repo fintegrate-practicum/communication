@@ -15,7 +15,6 @@ async function bootstrap() {
     });
     microserviceApp.listen();
     const httpApp = await NestFactory.create(AppModule);
-    const x = 5;
 
     await httpApp.listen(4156);
     const x = 1;
