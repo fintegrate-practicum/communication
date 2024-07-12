@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:lts-alpine
 
 WORKDIR /app
 
@@ -12,4 +12,6 @@ RUN npm run build
 
 EXPOSE 4000
 
+
 CMD [ "npm", "run","start:dev" ]
+

@@ -12,13 +12,17 @@ export class MailBridgeService {
 
   private async sendNewEmployeeEmail(message: any): Promise<string> {
     try {
-      const filePath =
-        'src/EmployeeInvitationEmail/EmployeeInvitationEmail.html';
+      const filePath = 'src/EmployeeInvitationEmail/EmployeeInvitationEmail.html';
       const htmlContent = await readFile(filePath, 'utf-8');
-      const personalizedHtml = htmlContent
-        .replace("[candidate's name]", message.name)
-        .replace('[job title]', message.jobTitle)
-        .replace('[Invitation Link]', message.invitationLink);
+      const ReplaceableElements = {
+        "[candidate's name]": message.name,
+        '[job title]': message.jobTitle,
+        '[Invitation Link]': message.invitationLink,
+      };
+      let personalizedHtml = htmlContent;
+      for (const placeholder in ReplaceableElements) {
+        personalizedHtml = personalizedHtml.replace(placeholder, ReplaceableElements[placeholder]);
+      }
       return personalizedHtml;
     } catch (error) {
       console.error('Error reading HTML file:', error);
@@ -84,30 +88,45 @@ export class MailBridgeService {
     await this.messageService.sendMessage(formattedMessage);
   }
 
-  private messageHtml(to: string, subject: string, text: string): string {
-    //פה מחזירים איך רוצים שההודעה תראה במייל, html
-    return `
-        <h1>${subject}</h1>
-        <p>Hello ${to},</p>
-        <p>${text}</p>
-        <p>How are you?</p>
-        <p>Best regards,</p>
-        <p>RabbitMq</p>
-      `;
+  private async messageHtml(to: string, subject: string, text: string): Promise<string> {
+    try {
+      const filePath = 'src/EmployeeInvitationEmail/EmployeeMessageEmail.html';
+      const htmlContent = await readFile(filePath, 'utf-8');
+      const ReplaceableElements = {
+        '[Name]': to,
+        '[Subject]': subject,
+        '[content of the message]': text,
+      };
+      let personalizedHtml = htmlContent;
+      for (const placeholder in ReplaceableElements) {
+        personalizedHtml = personalizedHtml.replace(placeholder, ReplaceableElements[placeholder]);
+      }
+      return personalizedHtml;
+    } catch (error) {
+      console.error('Error reading HTML file:', error);
+      throw new Error('Failed to read HTML file for new employee email');
+    }
   }
-  private sendCodeHtml(
-    to: string,
-    subject: string,
-    text: string,
-    code: string,
-  ): string {
-    return `
-        <h1>${subject}</h1>
-        <p>Hello ${to},</p>
-        <p>${text}</p>
-        <p>This is your verification code</p>
-        <p>${code}</p>
-        `;
+
+  private async sendCodeHtml(to: string, subject: string, text: string, code: string): Promise<string> {
+    try {
+      const filePath = 'src/EmployeeInvitationEmail/EmployeeSendCodeEmail.html';
+      const htmlContent = await readFile(filePath, 'utf-8');
+      const ReplaceableElements = {
+        '[Name]': to,
+        '[Subject]': subject,
+        '[content of the message]': text,
+        '[code]': code,
+      };
+      let personalizedHtml = htmlContent;
+      for (const placeholder in ReplaceableElements) {
+        personalizedHtml = personalizedHtml.replace(placeholder, ReplaceableElements[placeholder]);
+      }
+      return personalizedHtml;
+    } catch (error) {
+      console.error('Error reading HTML file:', error);
+      throw new Error('Failed to read HTML file for new employee email');
+    }
   }
 
   private async messageHtmlNewTask(message: TaskMessage): Promise<string> {
@@ -135,15 +154,9 @@ export class MailBridgeService {
       throw new Error('Failed to read HTML file for new employee email');
     }
   }
-  private orderMessageHtml(
-    to: string,
-    numOrder: string,
-    nameBussniesCode: string,
-    dataOrder: string,
-    city: string,
-    street: string,
-    numBuild: number,
-  ): string {
+  
+  private orderMessageHtml(to: string,numOrder: string,nameBussniesCode: string,dataOrder: string,city: string,
+    street: string,numBuild: number,): string {
     return ` 
     <p><strong>Subject: Your Order Confirmation from ${nameBussniesCode}</strong></p>
 
