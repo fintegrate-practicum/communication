@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <p><strong>Subject: Your Order Confirmation from <%= nameBussniesCode %></strong></p>
+  <p>Hello <%= to %>,</p>
+  <p>Thank you very much for your order from <%= nameBussniesCode %>! We are pleased to inform you that we have received your order, and it is currently being processed.</p>
+  <p><strong>Order Details:</strong></p>
+  <ul>
+    <li>Order Number: <%= numOrder %></li>
+    <li>Order Date: <%= dataOrder %></li>
+  </ul>
+  <p><strong>Shipping Details:</strong></p>
+  <ul>
+    <li>Recipient Name: <%= to %></li>
+    <li>Shipping Address: <%= city %> <%= street %> <%= numBuild %></li>
+  </ul>
+  <p>We will send you another update once your order is on its way. If you have any further questions, please do not hesitate to contact us.</p>
+  <p>Thank you for choosing <%= nameBussniesCode %>. We appreciate your trust in us and look forward to serving you again in the future.</p>
+  <p>Best regards,<br>
+  The <%= nameBussniesCode %> Team</p>
+</body>
+</html>

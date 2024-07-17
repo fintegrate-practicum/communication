@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:500,800&display=swap&subset=cyrillic-ext" rel="stylesheet">
+  <link rel="stylesheet" href="./components/Style.css">
+ 
+</head>
+<body>
+  <div class="container">
+    <%- include('Header') %> 
+    <div class="content">
+      <h1>Hello <%= name %>,</h1>
+      <p>
+        We are pleased to invite you to join our company as <%= jobTitle %>.
+        <br>
+        We were very impressed by your experience, your skills and your personal qualities, and we believe that you will be able to contribute a lot to our team.
+        <br>
+        The HR team will contact you soon to coordinate a meeting and an intake process.
+        <br>
+        console.log(`Skjhgfd `);
+        Thank you for your interest in the <%= jobTitle %>.
+        <br>
+        We appreciate the time you spent in the recruitment process.
+        <br><br>
+        Best regards,
+        <br>
+        Recruitment team
+        <br><br>
+        Please click the following link to complete your registration:
+      </p>
+      
+      <Button link={invitationLink} text="Click here to register" ></Button>
+
+    </div>
+    <%- include('Footer') %>
+  </div>
+</body>
+</html>
