@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailBridgeService } from './mail-bridge.service';
 import { readFile } from 'fs/promises';
+import { MessageService } from '../message.service';
 
 jest.mock('fs/promises');
 
@@ -9,7 +10,7 @@ describe('MailBridgeService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MailBridgeService],
+      providers: [MailBridgeService, { provide: MessageService, useValue: {} }],
     }).compile();
 
     service = module.get<MailBridgeService>(MailBridgeService);

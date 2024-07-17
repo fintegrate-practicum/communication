@@ -5,7 +5,7 @@ export interface Message {
   name?: string;
   html: string;
   numOrder?: string;
-  nameBussniesCode?: string;
+  nameBusinessCode?: string;
   dateOrder?: string;
   city?: string;
   street?: string;

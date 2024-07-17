@@ -4,6 +4,7 @@ import { Message, MessageType } from '../../interface/message.interface';
 import { readFile } from 'fs/promises';
 import * as ejs from 'ejs';
 
+
 @Injectable()
 export class MailBridgeService {
   constructor(private readonly messageService: MessageService) {}
@@ -12,7 +13,10 @@ export class MailBridgeService {
     try {
       const template = await readFile(templatePath, 'utf-8');
       return ejs.render(template, data);
+      
     } catch (error) {
+      console.error('Error reading or rendering EJS template:', error);
+      throw new Error('Failed to read or render EJS template');
       console.error('Error reading or rendering EJS template:', error);
       throw new Error('Failed to read or render EJS template');
     }
@@ -69,6 +73,7 @@ export class MailBridgeService {
       kindSubject: message.kindSubject,
       businessId: message.businessId,
     };
+
 
     await this.messageService.sendMessage(formattedMessage);
   }
