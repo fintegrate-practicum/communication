@@ -1,5 +1,5 @@
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { Message } from './interface/message.interface';
 import { MailBridgeService } from './services/mail-bridge/mail-bridge.service';
 
