@@ -49,15 +49,25 @@
   <div class="container">
     <img class="header-img" src="./images/group2.png" alt="Header Image">
     <div class="content">
-      <h1>[Subject]</h1>
+      <h1>Hello <%= name %>,</h1>
       <p>
-        Hello [to],
+        We are pleased to invite you to join our company as <%= jobTitle %>.
         <br>
-        l <p>[content of the message]</p>
+        We were very impressed by your experience, your skills and your personal qualities, and we believe that you will be able to contribute a lot to our team.
         <br>
-        This is your verification code: [code]
+        The HR team will contact you soon to coordinate a meeting and an intake process.
+        <br>
+        Thank you for your interest in the <%= jobTitle %>.
+        <br>
+        We appreciate the time you spent in the recruitment process.
+        <br><br>
+        Best regards,
+        <br>
+        Recruitment team.
+        <br><br>
+        Please click the following link to complete your registration:
       </p>
-      <a href="https://viewstripo.email" target="_blank" class="button">[Invitation Link] Click here to register</a>
+      <a href="<%= invitationLink %>" target="_blank" class="button">Click here to register</a>
     </div>
     <img class="footer-img" src="./images/group.png" alt="Footer Image">
   </div>
