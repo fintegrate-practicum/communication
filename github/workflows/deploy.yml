@@ -29,10 +29,8 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          # workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          # service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-          workload_identity_provider: projects/156485554767/locations/global/workloadIdentityPools/github-cli-pool/providers/github-cli-pool
-          service_account: github-action-fintegrate@fintegrate-fs.iam.gserviceaccount.com
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
           project_id: '${{ env.PROJECT_ID }}'
 
 
