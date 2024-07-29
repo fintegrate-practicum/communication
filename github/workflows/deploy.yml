@@ -5,12 +5,12 @@ on:
     branches: ['main']
 
 env:
-  PROJECT_ID: fintegrate-fs
+  PROJECT_ID: fintegrate-fs1
   SERVICE: communication
   REGION: us-central1
-  REPO: communication
+  REPO: fintegrate
   GAR_LOCATION: us-central1
-  IMAGE: communication
+  IMAGE: fintegrate
 
 jobs:
   deploy:
@@ -29,8 +29,8 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+          service_account: ${{ secrets.SERVICE_EMAIL }}
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Docker Auth
