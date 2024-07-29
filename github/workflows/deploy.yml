@@ -10,7 +10,7 @@ env:
   REGION: us-central1
   REPO: fintegrate
   GAR_LOCATION: us-central1
-  IMAGE: fintegrate
+  IMAGE: communication
 
 jobs:
   deploy:
@@ -29,7 +29,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          workload_identity_provider: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.SERVICE_EMAIL }}
           project_id: ${{ env.PROJECT_ID }}
 
