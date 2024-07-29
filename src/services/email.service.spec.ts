@@ -23,11 +23,11 @@ describe('EmailService', () => {
     get: jest.fn((key: string) => {
       switch (key) {
         case 'MAILGUN_API_KEY':
-          return '0f1db83d-8a7c2ae3';
+          return 'test-api-key';
         case 'MAILGUN_DOMAIN':
-          return 'sandbox5c1f6f6f2f9c436b8969125b63bb8929.mailgun.org';
+          return 'sandbox1234567890.mailgun.org';
         case 'MAILGUN_EMAIL':
-          return 'Fintegrate <Fintegrate@sandbox5c1f6f6f2f9c436b8969125b63bb8929.mailgun.org>>';
+          return 'Test <test@sandbox1234567890.mailgun.org>';
         default:
           return null;
       }
@@ -104,7 +104,7 @@ describe('EmailService', () => {
       );
 
       expect(mailgunMessagesMock.send).toHaveBeenCalledWith({
-        from: 'Admin <admin@sandbox99fdc20d16fc4427be805192fbb97e70.mailgun.org>',
+        from: 'Test <test@sandbox1234567890.mailgun.org>',
         to: mockMessage.to,
         subject: mockMessage.subject,
         html: mockMessage.html,
