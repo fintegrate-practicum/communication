@@ -1,0 +1,38 @@
+body {
+    font-family: 'Montserrat', 'Google Sans', 'Segoe UI', Roboto, Arial, Ubuntu, sans-serif;
+    color: #5e6e82;
+  }
+  .container {
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .header-img, .footer-img {
+    width: 592px;
+    display: block;
+    margin: 0 auto;
+  }
+  .content {
+    width: 560px;
+    margin: 0 auto;
+ 
+  }
+  h1 {
+    font-size: 30px;
+    font-weight: bold;
+  }
+  p {
+    line-height: 21px;
+    font-size: 14px;
+  }
+  .button {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 18px;
+    padding: 15px 30px;
+    background: #6503A6;
+    border-radius: 30px;
+    display: inline-block;
+  }
+  .footer-img{
+    margin-top: 2%;
+  }
