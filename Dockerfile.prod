@@ -1,15 +1,25 @@
+FROM node:lts-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci --ignore-scripts
+
+COPY . .
+
+RUN npm run build
+
 FROM node:lts-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm ci --omit=dev:
 
-COPY . .
-
-RUN npm run build
+COPY --from=build /app .
 
 EXPOSE 4000
 
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]
