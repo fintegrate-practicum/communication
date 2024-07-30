@@ -8,7 +8,7 @@ env:
   PROJECT_ID: fintegrate-fs1
   SERVICE: communication
   REGION: us-central1
-  REPO: cloud-run-source-deploy
+  REPO: fintegrate
   GAR_LOCATION: us-central1
   IMAGE: communication
 
