@@ -43,7 +43,8 @@ jobs:
           # workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           # service_account: ${{ secrets.SERVICE_EMAIL }}
 
-          workload_identity_provider: 'projects/346573255015/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          # workload_identity_provider: 'projects/346573255015/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          workload_identity_provider: 'projects/346573255015/locations/global/workloadIdentityPools/fintegrate'
 
           service_account: 'fintegrate@fintegrate-431011.iam.gserviceaccount.com'
           project_id: ${{ env.PROJECT_ID }}
