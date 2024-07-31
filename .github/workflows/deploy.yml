@@ -33,6 +33,7 @@ jobs:
           echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
           echo "IMAGE: ${{ env.IMAGE }}"
           echo "GITHUB_SHA: ${{ github.sha }}"
+          echo "WIF: ${{ secrets.WIF_PROVIDER }}"
 
       - name: Google Auth
         id: auth
