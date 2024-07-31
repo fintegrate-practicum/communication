@@ -24,6 +24,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Show Environment Variables
+        run: |
+          echo "PROJECT_ID: ${{ env.PROJECT_ID }}"
+          echo "SERVICE: ${{ env.SERVICE }}"
+          echo "REGION: ${{ env.REGION }}"
+          echo "REPO: ${{ env.REPO }}"
+          echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
+          echo "IMAGE: ${{ env.IMAGE }}"
+          echo "GITHUB_SHA: ${{ github.sha }}"
+
       - name: Google Auth
         id: auth
         uses: 'google-github-actions/auth@v2'
