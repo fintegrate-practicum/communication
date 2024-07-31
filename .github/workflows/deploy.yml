@@ -41,7 +41,7 @@ jobs:
         with:
           token_format: 'access_token'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          service_account: '${{ secrets.SERVICE_ACCOUNT }}'
+          service_account: '${{ secrets.SERVICE_EMAIL }}'
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Docker Auth
