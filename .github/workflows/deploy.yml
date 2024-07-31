@@ -5,12 +5,12 @@ on:
     branches: ['running-GC']
 
 env:
-  PROJECT_ID: fintegrate-431011
+  PROJECT_ID: fintegrate-431121
   SERVICE: communication
   REGION: us-central1
-  REPO: fintegrate
+  REPO: my-repo
+  IMAGE: my-image
   GAR_LOCATION: us-central1
-  IMAGE: infrastructure-communication
 
 jobs:
   deploy:
