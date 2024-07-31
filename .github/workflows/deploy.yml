@@ -40,7 +40,7 @@ jobs:
       # service_account: ${{ secrets.SERVICE_EMAIL }}
 
       # workload_identity_provider: 'projects/346573255015/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-      # project_id: ${{ env.PROJECT_ID }}
+
       - name: Google Auth
         id: auth
         uses: 'google-github-actions/auth@v2'
@@ -48,6 +48,7 @@ jobs:
           token_format: 'access_token'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
           service_account: '${{ secrets.SERVICE_ACCOUNT }}'
+          project_id: ${{ env.PROJECT_ID }}
 
       - name: Docker Auth
         id: docker-auth
