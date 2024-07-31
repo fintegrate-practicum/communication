@@ -6,9 +6,9 @@ on:
 
 env:
   PROJECT_ID: fintegrate-431121
-  GAR_LOCATION: us-central1 
-  SERVICE: communication 
-  REGION: us-central1 
+  GAR_LOCATION: us-central1
+  SERVICE: communication
+  REGION: us-central1
 
 jobs:
   deploy:
@@ -46,10 +46,8 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-           token_format: 'access_token'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          service_account: '${{ secrets.SERVICE_ACCOUNT }}' 
-
+          service_account: '${{ secrets.SERVICE_ACCOUNT }}'
 
       - name: Docker Auth
         id: docker-auth
