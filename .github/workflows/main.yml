@@ -54,5 +54,14 @@ jobs:
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
 
+      - name: Show Environment Variables
+        run: |
+          echo "PROJECT_ID: ${{ env.PROJECT_ID }}"
+          echo "SERVICE: ${{ env.SERVICE }}"
+          echo "REGION: ${{ env.REGION }}"
+          echo "REPO: ${{ env.REPO }}"
+          echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
+          echo "IMAGE: ${{ env.IMAGE }}"
+
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
