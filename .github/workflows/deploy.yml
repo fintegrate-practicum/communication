@@ -9,6 +9,8 @@ env:
   GAR_LOCATION: us-central1
   SERVICE: communication
   REGION: us-central1
+  REPO: my-repo
+  IMAGE: my-image
 
 jobs:
   deploy:
