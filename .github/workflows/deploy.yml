@@ -2,7 +2,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: ['main']
+    branches: ['running-GC']
 
 env:
   PROJECT_ID: fintegrate-431011
