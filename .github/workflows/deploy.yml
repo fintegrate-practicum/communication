@@ -65,5 +65,3 @@ jobs:
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
-        env:
-          MY_ENV_VAR: ${{ secrets.MY_ENV_VAR }}
