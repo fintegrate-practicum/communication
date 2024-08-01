@@ -2,13 +2,14 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: ['running-GC']
+    branches:
+      - 'running-GC'
 
 env:
-  PROJECT_ID: fintegrate-f # Update with your Google Cloud project id
-  GAR_LOCATION: us-central1 # Update with your Artifact Registry location
-  SERVICE: communication # Update with your Cloud Run service name
-  REGION: us-central1 # Update with your Cloud Run service region
+  PROJECT_ID: fintegrate-f # Google Cloud project ID
+  GAR_LOCATION: us-central1 # Artifact Registry location
+  SERVICE: communication # Cloud Run service name
+  REGION: us-central1 # Cloud Run region
 
 jobs:
   deploy:
@@ -20,14 +21,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        # Checkout the code from the repository
 
       - name: Google Auth
         id: auth
         uses: google-github-actions/auth@v2
         with:
           token_format: 'access_token'
-          workload_identity_provider: '${{ secrets.MY_WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          service_account: '${{ secrets.MY_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+          workload_identity_provider: '${{ secrets.MY_WIF_PROVIDER }}'
+          service_account: '${{ secrets.MY_SERVICE_ACCOUNT }}'
+        # Authenticate with Google Cloud using Workload Identity Federation
 
       - name: Docker Auth
         id: docker-auth
@@ -36,11 +39,13 @@ jobs:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
           registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
+        # Authenticate Docker to access Google Artifact Registry
 
       - name: Build and Push Container
         run: |-
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+        # Build the Docker image and push it to Artifact Registry
 
       - name: Deploy to Cloud Run
         id: deploy
@@ -49,6 +54,8 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
+        # Deploy the Docker image to Cloud Run
 
       - name: Show Output
-        run: echo ${{ steps.deploy.outputs.url }}
+        run: echo "Deployed URL: ${{ steps.deploy.outputs.url }}"
+        # Display the URL of the deployed Cloud Run service
