@@ -10,7 +10,7 @@ env:
   GAR_LOCATION: us-central1 # Artifact Registry location
   SERVICE: communication # Cloud Run service name
   REGION: us-central1 # Cloud Run region
-  REPO: fintegrate # Artifact Registry repository name
+  REPO: communication # Artifact Registry repository name
   IMAGE: communication # Docker image name
 
 jobs:
