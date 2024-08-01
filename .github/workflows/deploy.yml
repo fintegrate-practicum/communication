@@ -2,8 +2,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches:
-      - 'running-GC'
+    branches: ['main']
 
 env:
   PROJECT_ID: fintegrate-f # Google Cloud project ID
@@ -15,8 +14,6 @@ env:
 
 jobs:
   deploy:
-    permissions:
-      contents: 'read'
       id-token: 'write'
 
     runs-on: ubuntu-latest
@@ -44,11 +41,7 @@ jobs:
         run: |-
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}"
-
       - name: Deploy to Cloud Run
-        id: deploy
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
