@@ -24,6 +24,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up date-based image tag
+        id: set-tag
+        run: echo "IMAGE_TAG=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
+
       - name: Google Auth
         id: auth
         uses: google-github-actions/auth@v2
@@ -44,8 +48,8 @@ jobs:
         run: |-
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}"
-          docker tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:latest"
-          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:latest"
+          docker tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}"
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}"
 
       - name: Deploy to Cloud Run
         id: deploy
@@ -53,7 +57,7 @@ jobs:
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}
           labels: managed-by=github-actions,commit-sha=${{ github.sha }}
 
       - name: Show Output
