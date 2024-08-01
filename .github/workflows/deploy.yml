@@ -10,7 +10,7 @@ env:
   GAR_LOCATION: us-central1 # Artifact Registry location
   SERVICE: communication # Cloud Run service name
   REGION: us-central1 # Cloud Run region
-  REPO:  # Artifact Registry repository name
+  REPO: fintegrate # Artifact Registry repository name
   IMAGE: communication # Docker image name
 
 jobs:
@@ -41,19 +41,17 @@ jobs:
           registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
 
       - name: Build and Push Container
-          run: |-
-            docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO}}/${{ env.IMAGE }}:${{ github.sha }}" ./
-            docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}"
+        run: |-
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" ./
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}"
 
-      # Build and push the Docker image
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
-        # Deploy the Docker image to Cloud Run
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
