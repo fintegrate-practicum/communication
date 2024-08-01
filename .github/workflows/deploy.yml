@@ -58,7 +58,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: communication
-          image: us-central1-docker.pkg.dev/fintegrate-f/communication/communication:3e5772456bf4d54da640aea16a3ecf52dbdbed0c
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
           region: us-central1
           project_id: fintegrate-f
           timeout: 1200s # Increase the timeout to 20 minutes
