@@ -46,11 +46,10 @@ export class EmailService {
 
     const data = {
       from: this.configService.get<string>('MAILGUN_EMAIL'),
-      // התמונות נשלחות מצורפות למייל אך לא מוצגות כראוי בגוף ההודעה
       to,
       subject,
       html,
-      attachment: [fs.createReadStream(imagePath1), fs.createReadStream(imagePath2)],
+      inline: [fs.createReadStream(imagePath1), fs.createReadStream(imagePath2)],
     };
 
     try {
