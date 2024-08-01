@@ -57,5 +57,4 @@ jobs:
         # Deploy the Docker image to Cloud Run
 
       - name: Show Output
-        run: echo "Deployed URL: ${{ steps.deploy.outputs.url }}"
-        # Display the URL of the deployed Cloud Run service
+        run: echo ${{ steps.deploy.outputs.url }}
