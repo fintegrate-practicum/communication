@@ -61,7 +61,8 @@ jobs:
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
           region: us-central1
           project_id: fintegrate-f
-          timeout: 1200s # Increase the timeout to 20 minutes
+          timeout: 1200s
+          env_vars: PORT=4000
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
