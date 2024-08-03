@@ -6,12 +6,12 @@ on:
       - 'running-GC'
 
 env:
-  PROJECT_ID: fintegrate-f # Google Cloud project ID
-  GAR_LOCATION: us-central1 # Artifact Registry location
-  SERVICE: communication # Cloud Run service name
-  REGION: us-central1 # Cloud Run region
-  REPO: communication # Artifact Registry repository name
-  IMAGE: communication # Docker image name
+  PROJECT_ID: fintegrate-f
+  GAR_LOCATION: us-central1
+  SERVICE: communication
+  REGION: us-central1
+  REPO: communication
+  IMAGE: communication
 
 jobs:
   deploy:
@@ -29,8 +29,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: 'access_token'
-          workload_identity_provider: '${{ secrets.MY_WIF_PROVIDER }}' # Update with your Workload Identity Provider
-          service_account: '${{ secrets.MY_SERVICE_ACCOUNT }}' # Update with your Service Account
+          workload_identity_provider: '${{ secrets.MY_WIF_PROVIDER }}'
+          service_account: '${{ secrets.MY_SERVICE_ACCOUNT }}'
 
       - name: Docker Auth
         id: docker-auth
@@ -50,7 +50,7 @@ jobs:
           echo "IMAGE=${{ env.IMAGE }}"
 
       - name: Build and Push Container
-        run: |-
+        run: |
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}"
 
