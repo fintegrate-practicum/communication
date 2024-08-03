@@ -17,7 +17,7 @@ async function bootstrap() {
     microserviceApp.listen();
 
     const app = await NestFactory.create(AppModule);
-    const port = process.env.PORT || 8080;
+    const port = process.env.PORT || 4000;
     console.log(`Starting server on port ${port}`);
     await app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
