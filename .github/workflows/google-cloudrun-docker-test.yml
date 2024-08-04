@@ -101,6 +101,9 @@ jobs:
 
       # END - Docker auth and build
 
+      - name: Check gcloud version
+        run: gcloud version
+
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
