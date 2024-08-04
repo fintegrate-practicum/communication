@@ -11,7 +11,7 @@ env:
   SERVICE: communication
   REGION: us-central1
   REPO: communication
-  IMAGE: communication
+  IMAGE: infrastructure-communication
 
 jobs:
   deploy:
@@ -58,12 +58,9 @@ jobs:
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: communication
-          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:latest
-          region: us-central1
-          project_id: fintegrate-f
-          timeout: 1200s
-          port: 4000
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
