@@ -1,148 +1,129 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmailService } from './email.service';
-import { ConfigService } from '@nestjs/config';
 import { EmailLogService } from '../email-log/services/email-log.service';
-import { EmailLogStatus } from '../email-log/email-log-status.enum';
-import * as mailgun from 'mailgun-js';
+import { ConfigService } from '@nestjs/config';
+import * as sgMail from '@sendgrid/mail';
+import { Logger } from '@nestjs/common';
+import { EmailLogStatus } from 'src/email-log/email-log-status.enum';
+import { CreateEmailLogDto, UpdateEmailLogDto } from '../email-log/dto/email-log.dto';
+import { EmailLogDocument } from '../email-log/schemas/email-log.schema';
 
-jest.mock('mailgun-js');
+// Mocking SendGrid and EmailLogService
+jest.mock('@sendgrid/mail');
+jest.mock('../email-log/services/email-log.service');
 
 describe('EmailService', () => {
-  let service: EmailService;
+  let emailService: EmailService;
   let emailLogService: EmailLogService;
-  let configService: ConfigService;
-  let mailgunMock: jest.Mock;
-
-  const mockEmailLogService = {
-    create: jest.fn(),
-    update: jest.fn(),
-    findById: jest.fn(),
-  };
-
-  const mockConfigService = {
-    get: jest.fn((key: string) => {
-      switch (key) {
-        case 'MAILGUN_API_KEY':
-          return 'test-api-key';
-        case 'MAILGUN_DOMAIN':
-          return 'sandbox1234567890.mailgun.org';
-        case 'MAILGUN_EMAIL':
-          return 'Test <test@sandbox1234567890.mailgun.org>';
-        default:
-          return null;
-      }
-    }),
-  };
-
-  const mailgunMessagesMock = {
-    send: jest.fn(),
-  };
 
   beforeEach(async () => {
-    mailgunMock = mailgun as jest.Mock;
-    mailgunMock.mockReturnValue({
-      messages: jest.fn().mockReturnValue(mailgunMessagesMock),
-    });
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmailService,
-        { provide: EmailLogService, useValue: mockEmailLogService },
-        { provide: ConfigService, useValue: mockConfigService },
+        {
+          provide: EmailLogService,
+          useValue: {
+            create: jest.fn(),
+            update: jest.fn(),
+            findById: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockImplementation((key: string) => {
+              const config = {
+                SENDGRID_API_KEY: 'fake-sendgrid-api-key',
+                SENDGRID_FROM_EMAIL: 'from@example.com',
+              };
+              return config[key];
+            }),
+          },
+        },
       ],
     }).compile();
 
-    service = module.get<EmailService>(EmailService);
+    emailService = module.get<EmailService>(EmailService);
     emailLogService = module.get<EmailLogService>(EmailLogService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(emailService).toBeDefined();
   });
 
   describe('sendEmail', () => {
-    const mockMessage = {
-      to: 'test@example.com',
-      subject: 'Test Subject',
-      html: '<p>Test Email</p>',
-      kindSubject: 'testKind',
-      businessId: 'testBusinessId',
-    };
+    it('should send email and update log', async () => {
+      const emailLog = { _id: '123' } as EmailLogDocument;
 
-    it('should create email log with PENDING status', async () => {
-      const mockEmailLog = { _id: 'testId' };
-      mockEmailLogService.create.mockResolvedValue(mockEmailLog);
+      jest.spyOn(emailLogService, 'create').mockResolvedValue(emailLog);
+      jest.spyOn(emailLogService, 'update').mockResolvedValue(null);
+      jest
+        .spyOn(sgMail, 'send')
+        .mockResolvedValue([{ statusCode: 202, body: [], headers: {} }, {}]);
+      const to = 'test@example.com';
+      const subject = 'Test Subject';
+      const html = '<p>Test HTML</p>';
+      const kindSubject = 'Test Kind';
+      const businessId = 'test-business-id';
 
-      await service.sendEmail(
-        mockMessage.to,
-        mockMessage.subject,
-        mockMessage.html,
-        mockMessage.kindSubject,
-        mockMessage.businessId,
-      );
+      await emailService.sendEmail(to, subject, html, kindSubject, businessId);
 
-      expect(mockEmailLogService.create).toHaveBeenCalledWith({
+      expect(emailLogService.create).toHaveBeenCalledWith({
         status: EmailLogStatus.PENDING,
-        kindSubject: mockMessage.kindSubject,
-        businessId: mockMessage.businessId,
-        recipient: mockMessage.to,
+        kindSubject,
+        businessId,
+        recipient: to,
         timestamp: expect.any(Date),
       });
-    });
 
-    it('should send email using mailgun and update email log with SENT status', async () => {
-      const mockEmailLog = { _id: 'testId' };
-      mockEmailLogService.create.mockResolvedValue(mockEmailLog);
-
-      await service.sendEmail(
-        mockMessage.to,
-        mockMessage.subject,
-        mockMessage.html,
-        mockMessage.kindSubject,
-        mockMessage.businessId,
-      );
-
-      expect(mailgunMessagesMock.send).toHaveBeenCalledWith({
-        from: 'Test <test@sandbox1234567890.mailgun.org>',
-        to: mockMessage.to,
-        subject: mockMessage.subject,
-        html: mockMessage.html,
-      });
-
-      expect(mockEmailLogService.update).toHaveBeenCalledWith('testId', {
+      expect(emailLogService.update).toHaveBeenCalledWith(emailLog._id.toString(), {
         status: EmailLogStatus.SENT,
       });
-    });
 
-    it('should update email log with FAILED status if sending email fails', async () => {
-      const mockEmailLog = { _id: 'testId' };
-      mockEmailLogService.create.mockResolvedValue(mockEmailLog);
-      mailgunMessagesMock.send.mockRejectedValue(new Error('Send error'));
-
-      await service.sendEmail(
-        mockMessage.to,
-        mockMessage.subject,
-        mockMessage.html,
-        mockMessage.kindSubject,
-        mockMessage.businessId,
-      );
-
-      expect(mockEmailLogService.update).toHaveBeenCalledWith('testId', {
-        status: EmailLogStatus.FAILED,
-        errorMessage: 'Send error',
+      expect(sgMail.send).toHaveBeenCalledWith({
+        to,
+        from: 'from@example.com',
+        subject,
+        html,
+        attachments: expect.any(Array),
       });
     });
-  });
 
-  describe('getEmailLogById', () => {
-    it('should call emailLogService.findById', async () => {
-      const mockEmailLog = { _id: 'testId', recipient: 'test@example.com' };
-      mockEmailLogService.findById.mockResolvedValue(mockEmailLog);
+    it('should handle errors and update log', async () => {
+      const emailLog = { _id: '123' } as EmailLogDocument;
 
-      const result = await service.getEmailLogById('testId');
-      expect(result).toEqual(mockEmailLog);
-      expect(mockEmailLogService.findById).toHaveBeenCalledWith('testId');
+      jest.spyOn(emailLogService, 'create').mockResolvedValue(emailLog);
+      jest.spyOn(emailLogService, 'update').mockResolvedValue(null);
+      jest.spyOn(sgMail, 'send').mockRejectedValue(new Error('SendGrid error'));
+
+      const to = 'test@example.com';
+      const subject = 'Test Subject';
+      const html = '<p>Test HTML</p>';
+      const kindSubject = 'Test Kind';
+      const businessId = 'test-business-id';
+
+      await emailService.sendEmail(to, subject, html, kindSubject, businessId);
+
+      expect(emailLogService.create).toHaveBeenCalledWith({
+        status: EmailLogStatus.PENDING,
+        kindSubject,
+        businessId,
+        recipient: to,
+        timestamp: expect.any(Date),
+      });
+
+      expect(emailLogService.update).toHaveBeenCalledWith(emailLog._id.toString(), {
+        status: EmailLogStatus.FAILED,
+        errorMessage: 'SendGrid error',
+      });
+
+      expect(sgMail.send).toHaveBeenCalledWith({
+        to,
+        from: 'from@example.com',
+        subject,
+        html,
+        attachments: expect.any(Array),
+      });
     });
   });
 });
