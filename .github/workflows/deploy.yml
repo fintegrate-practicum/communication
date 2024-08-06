@@ -1,0 +1,65 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - 'main'
+env:
+  PROJECT_ID: fintegrate-f
+  GAR_LOCATION: us-central1
+  SERVICE: communication
+  REGION: us-central1
+  REPO: communication
+  IMAGE: infrastructure-communication
+  WORKFLOW_NAME: workflow-1
+
+jobs:
+  deploy:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: '${{ secrets.MY_WIF_PROVIDER }}'
+          service_account: '${{ secrets.MY_SERVICE_ACCOUNT }}'
+
+      - name: Docker Auth
+        id: docker-auth
+        uses: docker/login-action@v2
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+          registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
+
+      - name: Build and Push Container
+        run: |
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}" ./
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}"
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Trigger Google Cloud Workflow
+        run: |
+          gcloud workflows execute ${{ env.WORKFLOW_NAME }} \
+            --project ${{ env.PROJECT_ID }} \
+            --location ${{ env.REGION }} \
+            --data '{"MONGO_URI": "${{ secrets.MONGO_URI }}"}'
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+
+      - name: Show Output
+        run: echo "Deployment successful!"
