@@ -9,7 +9,7 @@ env:
   GAR_LOCATION: us-central1
   SERVICE: communication
   REGION: us-central1
-  REPO: communication
+  REPO: fintegrate
   IMAGE: infrastructure-communication
   WORKFLOW_NAME: workflow-1
 
@@ -57,7 +57,7 @@ jobs:
           gcloud workflows execute ${{ env.WORKFLOW_NAME }} \
             --project ${{ env.PROJECT_ID }} \
             --location ${{ env.REGION }} \
-            --data '{"MONGO_URI": "${{ secrets.MONGO_URI }}"}'
+            --data '{"MONGODB_URI": "${{ secrets.MONGO_URI }}"}'
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
 
