@@ -4,12 +4,13 @@ on:
   push:
     branches:
       - 'main'
+
 env:
   PROJECT_ID: fintegrate-f
   GAR_LOCATION: us-central1
   SERVICE: communication
   REGION: us-central1
-  REPO: fintegrate
+  REPO: communication
   IMAGE: infrastructure-communication
   WORKFLOW_NAME: workflow-1
 
