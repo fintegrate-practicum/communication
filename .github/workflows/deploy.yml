@@ -9,7 +9,7 @@ env:
   GAR_LOCATION: us-central1
   SERVICE: communication
   REGION: us-central1
-  REPO: communication
+  REPO: fintegrate
   IMAGE: infrastructure-communication
   WORKFLOW_NAME: workflow-1
 
