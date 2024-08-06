@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Transport } from '@nestjs/microservices';
-
+import { PapertrailLogger } from '../logger/logger.service';
 async function bootstrap() {
+  
   try {
     const microserviceApp = await NestFactory.createMicroservice(AppModule, {
       transport: Transport.RMQ,
@@ -14,9 +15,12 @@ async function bootstrap() {
         password: process.env.AMQP_PASSWORD,
       },
     });
+
     microserviceApp.listen();
 
     const app = await NestFactory.create(AppModule);
+    const papertrailLogger = app.get(PapertrailLogger);
+    app.useLogger(papertrailLogger);  
     await app.listen(4000);
     console.log('Server is running on http://localhost:4000');
   } catch (error) {
