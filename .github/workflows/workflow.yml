@@ -1,0 +1,11 @@
+main:
+  steps:
+    - init:
+        assign:
+          - mongoUri: ${sys.get_env("MONGO_URI")}
+    - useMongoUri:
+        call: someFunction
+        args:
+          uri: ${mongoUri}
+    - returnResult:
+        return: ${mongoUri}
