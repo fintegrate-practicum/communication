@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as mailgun from 'mailgun-js';
+import * as sgMail from '@sendgrid/mail';
 import { ConfigService } from '@nestjs/config';
 import { EmailLogService } from '../email-log/services/email-log.service';
 import { CreateEmailLogDto, UpdateEmailLogDto } from '../email-log/dto/email-log.dto';
@@ -11,16 +11,12 @@ import * as path from 'path';
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
-  private mailgun;
 
   constructor(
     private readonly emailLogService: EmailLogService,
     private readonly configService: ConfigService,
   ) {
-    this.mailgun = mailgun({
-      apiKey: this.configService.get<string>('MAILGUN_API_KEY'),
-      domain: this.configService.get<string>('MAILGUN_DOMAIN'),
-    });
+    sgMail.setApiKey(this.configService.get<string>('SENDGRID_API_KEY'));
   }
 
   async sendEmail(
@@ -41,20 +37,38 @@ export class EmailService {
     const emailLog: EmailLogDocument =
       await this.emailLogService.create(createEmailLogDto);
 
+    // קריאת תמונות והמרתן ל-Base64
     const imagePath1 = path.join(__dirname, '..', '..', 'public', 'images', 'group2.png');
     const imagePath2 = path.join(__dirname, '..', '..', 'public', 'images', 'group.png');
+    const imageBase64_1 = fs.readFileSync(imagePath1).toString('base64');
+    const imageBase64_2 = fs.readFileSync(imagePath2).toString('base64');
 
-    const data = {
-      from: this.configService.get<string>('MAILGUN_EMAIL'),
+    const msg = {
       to,
+      from: this.configService.get<string>('SENDGRID_FROM_EMAIL'),
       subject,
       html,
-      inline: [fs.createReadStream(imagePath1), fs.createReadStream(imagePath2)],
+      attachments: [
+        {
+          content: imageBase64_1,
+          filename: 'group2.png',
+          type: 'image/png',
+          disposition: 'inline',
+          content_id: 'headerImage',
+        },
+        {
+          content: imageBase64_2,
+          filename: 'group.png',
+          type: 'image/png',
+          disposition: 'inline',
+          content_id: 'footerImage',
+        },
+      ],
     };
 
     try {
-      this.logger.log(`Image paths: ${imagePath1}, ${imagePath2}`);
-      await this.mailgun.messages().send(data);
+      this.logger.log(`Sending email to ${to}`);
+      await sgMail.send(msg);
       this.logger.log('Email sent successfully');
 
       const updateEmailLogDto: UpdateEmailLogDto = {
