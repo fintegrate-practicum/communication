@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 4000
 
+ENV MONGO_URI=${MONGO_URI}
+
 CMD [ "npm", "run", "start:dev" ]
