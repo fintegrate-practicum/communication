@@ -58,9 +58,9 @@ jobs:
           gcloud workflows execute ${{ env.WORKFLOW_NAME }} \
             --project ${{ env.PROJECT_ID }} \
             --location ${{ env.REGION }} \
-            --data '{"MONGO_URI": "${{ secrets.MONGO_URI }}"}'
+            --data '{"MONGODB_URI": "${{ secrets.MONGODB_URI }}"}'
         env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
       - name: Show Output
         run: echo "Deployment successful!"
