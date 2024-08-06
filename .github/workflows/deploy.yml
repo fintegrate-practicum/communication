@@ -60,7 +60,7 @@ jobs:
             --location ${{ env.REGION }} \
             --data '{"MONGO_URI": "${{ secrets.MONGO_URI }}"}'
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
 
       - name: Show Output
         run: echo "Deployment successful!"
