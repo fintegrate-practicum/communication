@@ -57,7 +57,7 @@ jobs:
           gcloud workflows execute ${{ env.WORKFLOW_NAME }} \
             --project ${{ env.PROJECT_ID }} \
             --location ${{ env.REGION }} \
-            --data '{"MONGODB_URI": "${{ secrets.MONGO_URI }}"}'
+            --data '{"MONGO_URI": "${{ secrets.MONGO_URI }}"}'
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
 
