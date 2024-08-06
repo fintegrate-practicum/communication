@@ -55,11 +55,11 @@ jobs:
       - name: Trigger Google Cloud Workflow
         uses: google-github-actions/deploy-workflow@v2
         with:
-          workflow: workflow-1
+          workflow: your-workflow-name
           project: ${{ env.PROJECT_ID }}
           location: ${{ env.REGION }}
           params: |
-            MONGO_URI=${{ secrets.MONGO_URI }}  # Pass the MONGO_URI secret
+            MONGO_URI=${{ secrets.MONGO_URI }}
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
