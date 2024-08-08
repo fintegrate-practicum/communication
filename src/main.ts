@@ -17,6 +17,8 @@ async function bootstrap() {
     microserviceApp.listen();
 
     const app = await NestFactory.create(AppModule);
+    console.log(process.env.MONGODB_URI);
+
     await app.listen(4000);
     console.log('Server is running on http://localhost:4000');
   } catch (error) {
