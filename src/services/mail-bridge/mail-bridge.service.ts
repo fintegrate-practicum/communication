@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
 import { readFile } from 'fs/promises';
@@ -6,6 +6,8 @@ import * as ejs from 'ejs';
 
 @Injectable()
 export class MailBridgeService {
+  private readonly logger = new Logger(MailBridgeService.name);
+
   constructor(private readonly messageService: MessageService) {}
 
   private async renderTemplate(templatePath: string, data: object): Promise<string> {
@@ -13,7 +15,7 @@ export class MailBridgeService {
       const template = await readFile(templatePath, 'utf-8');
       return ejs.render(template, data);
     } catch (error) {
-      console.error('Error reading or rendering EJS template:', error);
+      this.logger.error('Error reading or rendering EJS template:', error);
       throw new Error('Failed to read or render EJS template');
     }
   }
@@ -57,7 +59,7 @@ export class MailBridgeService {
     try {
       htmlContent = await this.renderTemplate(templatePath, templateData);
     } catch (error) {
-      console.error('Error generating HTML content:', error);
+      this.logger.error('Error generating HTML content:', error);
       htmlContent = 'Default HTML content';
     }
 
