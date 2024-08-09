@@ -31,6 +31,9 @@
       line-height: 21px;
       font-size: 14px;
     }
+    .footer-img{
+      margin-top: 2%;
+    }
     .button {
       text-decoration: none;
       color: #FFFFFF;
@@ -40,14 +43,11 @@
       border-radius: 30px;
       display: inline-block;
     }
-    .footer-img{
-      margin-top: 2%;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <img class="header-img" src="./images/group2.png" alt="Header Image">
+    <img class="header-img" src="cid:headerImage" alt="Header Image">
     <div class="content">
       <h1><%= subject %></h1>
       <p>
@@ -59,7 +59,7 @@
       </p>
       <a href="<%= invitationLink %>" target="_blank" class="button">Click here to register</a>
     </div>
-    <img class="footer-img" src="./images/group.png" alt="Footer Image">
+    <img class="footer-img" src="cid:footerImage" alt="Footer Image">
   </div>
 </body>
 </html>
