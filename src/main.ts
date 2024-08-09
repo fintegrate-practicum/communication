@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Transport } from '@nestjs/microservices';
-import { PapertrailLogger } from '../logger/logger.service';
+import { PapertrailLogger } from './logger';
 async function bootstrap() {
   
   try {
@@ -22,7 +22,7 @@ async function bootstrap() {
     const papertrailLogger = app.get(PapertrailLogger);
     app.useLogger(papertrailLogger);  
     await app.listen(4000);
-    console.log('Server is running on http://localhost:4000');
+    papertrailLogger.log('Server is running on http://localhost:4000');
   } catch (error) {
     console.error('Error during bootstrap:', error);
   }

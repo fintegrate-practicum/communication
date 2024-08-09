@@ -10,7 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailLogModule } from './email-log/module/email-log.module';
 import { EmailModule } from './modules/email.module';
 import { EmailSettingsModule } from './email-settings/modules/email-settings.module';
-import { LoggerModule } from '../logger/logger.module';
+import { PapertrailLogger } from './logger';
 
 
 @Module({
@@ -28,7 +28,6 @@ import { LoggerModule } from '../logger/logger.module';
       }),
       inject: [ConfigService],
     }),
-    LoggerModule
   ],
   controllers: [AppController],
   providers: [
@@ -37,6 +36,7 @@ import { LoggerModule } from '../logger/logger.module';
     EmailService,
     MessageService,
     MailBridgeService,
+    PapertrailLogger
   ],
 })
 export class AppModule {}
