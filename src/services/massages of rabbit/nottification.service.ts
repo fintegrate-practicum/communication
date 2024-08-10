@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { ClientProxy } from '@nestjs/microservices';
 
 export @Injectable()
 class NotificationService {
+  private readonly logger = new Logger(NotificationService.name);
+
   constructor(private client: ClientProxy) {}
 
 async sendRecruitmentNotification(
@@ -43,7 +45,7 @@ async sendRecruitmentNotification(
       Successfully!
       ${nameOfHRDepartment}
     `;
-    console.log(messageContent); 
+    this.logger.log(messageContent); 
   }
 
   async sendCVReceiptNotification(

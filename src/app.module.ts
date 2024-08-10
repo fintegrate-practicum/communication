@@ -10,6 +10,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailLogModule } from './email-log/module/email-log.module';
 import { EmailModule } from './modules/email.module';
 import { EmailSettingsModule } from './email-settings/modules/email-settings.module';
+import { PapertrailLogger } from './logger';
+
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
     EmailService,
     MessageService,
     MailBridgeService,
+    PapertrailLogger
   ],
 })
 export class AppModule {}
