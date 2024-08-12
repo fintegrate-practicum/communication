@@ -12,9 +12,6 @@ export class EmailLog {
   kindSubject: string;
 
   @Prop({ required: true })
-  businessId: string;
-
-  @Prop({ required: true })
   recipient: string;
 
   @Prop()
