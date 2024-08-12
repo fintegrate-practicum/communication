@@ -3,7 +3,7 @@
 FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
 [ -z "$FILES" ] && exit 0
 
-npm test
+npm run test
 test_result=$?
 if [ $test_result -ne 0 ]; then
   echo "Tests failed. Aborting commit."
