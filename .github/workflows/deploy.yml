@@ -10,7 +10,7 @@ env:
   GAR_LOCATION: us-central1
   REGION: us-central1
   REPO: fintegrate
-  IMAGE: infrastructure-workers
+  IMAGE: infrastructure-communication
   WORKFLOW_NAME: workflow-1
 
 jobs:
