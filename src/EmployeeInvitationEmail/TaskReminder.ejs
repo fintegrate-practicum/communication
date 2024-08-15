@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:500,800&display=swap&subset=cyrillic-ext" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', 'Google Sans', 'Segoe UI', Roboto, Arial, Ubuntu, sans-serif;
+      color: #5e6e82;
+    }
+    .container {
+      text-align: center;
+      padding: 30px 20px;
+    }
+    .header-img, .footer-img {
+      width: 592px;
+      display: block;
+      margin: 0 auto;
+    }
+    .content {
+      width: 560px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 30px;
+      font-weight: bold;
+    }
+    p {
+      line-height: 21px;
+      font-size: 14px;
+    }
+    .footer-img {
+      margin-top: 2%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img class="header-img" src="cid:headerImage" alt="Header Image">
+    <div class="content">
+      <h1><%= subject  %> :תזכרות משימה  </h1>
+      <p>
+         ,<%= name %> שלום
+      </p>
+      <p>
+      .  <%= description %>
+      </p>
+      <p>
+       .אנא ודא שהמשימה תושלם בזמן
+      </p>
+      <p>
+        <%= managerName %> :מנהל המשימה
+      </p>
+      <p>
+        ,שיהיה לך יום נעים
+      </p>
+      <p>
+        צוות ניהול המשימות
+      </p>
+    </div>
+    <img class="footer-img" src="cid:footerImage" alt="Footer Image">
+  </div>
+</body>
+</html>

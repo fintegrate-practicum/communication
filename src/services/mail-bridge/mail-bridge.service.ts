@@ -32,7 +32,7 @@ export class MailBridgeService {
       jobTitle: message.jobTitle,
       invitationLink: message.invitationLink,
       description: message.description,
-      date: message.date?.toISOString().split('T')[0],
+      date:message.date ? new Date(message.date).toISOString().split('T')[0] : null,
       managerName: message.managerName,
       numOrder: message.numOrder,
       nameBusinessCode: message.nameBusinessCode,
@@ -48,6 +48,7 @@ export class MailBridgeService {
       'newTask': 'src/EmployeeInvitationEmail/employeeNewTask.ejs',
       'orderMessage': 'src/EmployeeInvitationEmail/orderMessage.ejs',
       'new Employee': 'src/EmployeeInvitationEmail/EmployeeInvitationEmail.ejs',
+      'taskReminder': 'src/EmployeeInvitationEmail/TaskReminder.ejs'
     };
 
     const templatePath = templateMap[message.kindSubject];
