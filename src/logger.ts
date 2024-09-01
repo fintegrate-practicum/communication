@@ -2,16 +2,32 @@ import { createLogger, format, transports, Logger } from 'winston';
 import { Papertrail } from 'winston-papertrail';
 import { LoggerService } from '@nestjs/common';
 
+// בדוק אם משתני הסביבה מוגדרים
+const papertrailHost = process.env.PAPERTRAIL_HOST;
+const papertrailPort = process.env.PAPERTRAIL_PORT;
+
+if (!papertrailHost || !papertrailPort) {
+  throw new Error('PAPERTRAIL_HOST and PAPERTRAIL_PORT must be defined');
+}
+
+// הגדרת Papertrail Transport
 const papertrailTransport = new Papertrail({
-  host: process.env.PAPERTRAIL_HOST,
-  port: process.env.PAPERTRAIL_PORT,
+  host: papertrailHost,
+  port: parseInt(papertrailPort, 10), // ודא שהפורט הוא מספר
   logFormat: (level: string, message: string) => `${level}: ${message}`,
 });
 
+// הגדרת הלוגר
 const logger = createLogger({
   level: 'info',
-  format: format.combine(format.timestamp(), format.simple()),
-  transports: [new transports.Console(), papertrailTransport],
+  format: format.combine(
+    format.timestamp(),
+    format.simple()
+  ),
+  transports: [
+    new transports.Console(),
+    papertrailTransport
+  ],
 });
 
 class PapertrailLogger implements LoggerService {
